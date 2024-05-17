@@ -3,23 +3,32 @@ import ctrl from "../controllers/contactsControllers.js";
 import validateBody from "../middlewares/validateBody.js";
 import {
   createContactSchema,
-  updateContactSchema,
-} from "../schemas/contactsSchemas.js";
+  updateFavoriteSchema,
+} from "../models/contact.js";
+import isValidMongooseId from "../middlewares/isValidMongooseId.js";
 
 const contactsRouter = express.Router();
 
 contactsRouter.get("/", ctrl.getAllContacts);
 
-contactsRouter.get("/:id", ctrl.getOneContact);
-
-contactsRouter.delete("/:id", ctrl.deleteContact);
+contactsRouter.get("/:id", isValidMongooseId, ctrl.getOneContact);
 
 contactsRouter.post("/", validateBody(createContactSchema), ctrl.createContact);
 
 contactsRouter.put(
   "/:id",
-  validateBody(updateContactSchema),
+  isValidMongooseId,
+  validateBody(createContactSchema),
   ctrl.updateContact
 );
+
+contactsRouter.patch(
+  "/:id/favorite",
+  isValidMongooseId,
+  validateBody(updateFavoriteSchema),
+  ctrl.updateFavorite
+);
+
+contactsRouter.delete("/:id", isValidMongooseId, ctrl.deleteContact);
 
 export default contactsRouter;
