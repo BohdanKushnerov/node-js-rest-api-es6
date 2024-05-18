@@ -1,11 +1,11 @@
 import express from "express";
-import ctrl from "../controllers/contactsControllers.js";
-import validateBody from "../middlewares/validateBody.js";
+import ctrl from "../../controllers/contacts.js";
+import validateBody from "../../middlewares/validateBody.js";
 import {
   createContactSchema,
   updateFavoriteSchema,
-} from "../models/contact.js";
-import isValidMongooseId from "../middlewares/isValidMongooseId.js";
+} from "../../models/contact.js";
+import isValidMongooseId from "../../middlewares/isValidMongooseId.js";
 
 const contactsRouter = express.Router();
 
