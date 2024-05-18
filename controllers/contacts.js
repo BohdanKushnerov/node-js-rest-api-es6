@@ -2,8 +2,22 @@ import HttpError from "../helpers/HttpError.js";
 import ctrlWrapper from "../helpers/ctrlWrapper.js";
 import Contact from "../models/contact.js";
 
-const getAllContacts = async (_, res) => {
-  const contacts = await Contact.find();
+const getAllContacts = async (req, res) => {
+  const { _id: owner } = req.user;
+  const { page = 1, limit = 10, favorite = "" } = req.query;
+  const skip = (page - 1) * limit;
+
+  const searchCriteria = { owner };
+
+  if (favorite === "true" || favorite === "false") {
+    searchCriteria.favorite = favorite === "true";
+  }
+
+  const contacts = await Contact.find(searchCriteria, "-createdAt -updatedAt", {
+    skip,
+    limit,
+  }).populate("owner", "name email");
+
   res.json(contacts);
 };
 
@@ -19,7 +33,8 @@ const getOneContact = async (req, res) => {
 };
 
 const createContact = async (req, res) => {
-  const result = await Contact.create(req.body);
+  const { _id: owner } = req.user;
+  const result = await Contact.create({ ...req.body, owner });
   res.status(201).json(result);
 };
 
