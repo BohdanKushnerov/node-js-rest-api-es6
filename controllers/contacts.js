@@ -4,13 +4,20 @@ import Contact from "../models/contact.js";
 
 const getAllContacts = async (req, res) => {
   const { _id: owner } = req.user;
-  const { page = 1, limit = 10 } = req.query;
+  const { page = 1, limit = 10, favorite = "" } = req.query;
   const skip = (page - 1) * limit;
 
-  const contacts = await Contact.find({ owner }, "-createdAt -updatedAt", {
+  const searchCriteria = { owner };
+
+  if (favorite === "true" || favorite === "false") {
+    searchCriteria.favorite = favorite === "true";
+  }
+
+  const contacts = await Contact.find(searchCriteria, "-createdAt -updatedAt", {
     skip,
     limit,
   }).populate("owner", "name email");
+
   res.json(contacts);
 };
 
