@@ -2,7 +2,7 @@ import { Schema, model } from "mongoose";
 import Joi from "joi";
 import handleMongooseError from "../helpers/handleMongooseError.js";
 
-const emailRegex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+const emailRegexp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
 const contactSchema = new Schema(
   {
@@ -12,7 +12,7 @@ const contactSchema = new Schema(
     },
     email: {
       type: String,
-      match: emailRegex,
+      match: emailRegexp,
       required: [true, "Set email for contact"],
     },
     phone: {
